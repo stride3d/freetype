@@ -6,7 +6,8 @@ NDK_HOST_NAME=arm-linux-androideabi
 NDK_STANDALONE_DIR=~/ndk-standalone-9
 
 # Create the standalone compiler
-#~/android-ndk-r9d/build/tools/make-standalone-toolchain.sh --platform=$ANDROID_TARGET_PLATFORM --install-dir=$NDK_STANDALONE_DIR
+rm -r $NDK_STANDALONE_DIR
+~/android-ndk-r9d/build/tools/make-standalone-toolchain.sh --platform=$ANDROID_TARGET_PLATFORM --install-dir=$NDK_STANDALONE_DIR --toolchain=arm-linux-androideabi-clang3.4
 
 # Add the compiler path to the path
 export PATH=$NDK_STANDALONE_DIR/bin:$PATH
@@ -22,7 +23,7 @@ function BuildAndInstallAndroid
 
 	# Set compilation flags
 	unset DEVROOT SDKROOT CFLAGS CC LD CPP CXX AR AS NM CXXCPP RANLIB LDFLAGS CPPFLAGS CXXFLAG
-	export CC=$NDK_HOST_NAME-gcc
+	export CC=$NDK_HOST_NAME-clang
 	export LDFLAGS="$ARCHI_LDFLAGS"
 	export CFLAGS="$ARCHI_CFLAGS -std=c99"
 

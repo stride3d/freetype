@@ -2,3 +2,6 @@ config.mk
 android*/share/*
 android*/include/*
 android*/bin/*
+android*/lib/*.so
+android*/lib/*.so.6
+android*/lib/*.la
