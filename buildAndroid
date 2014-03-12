@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# Set local variables
+ANDROID_TARGET_PLATFORM=android-9
+NDK_HOST_NAME=arm-linux-androideabi
+NDK_STANDALONE_DIR=~/ndk-standalone-9
+
+# Create the standalone compiler
+#~/android-ndk-r9d/build/tools/make-standalone-toolchain.sh --platform=$ANDROID_TARGET_PLATFORM --install-dir=$NDK_STANDALONE_DIR
+
+# Add the compiler path to the path
+export PATH=$NDK_STANDALONE_DIR/bin:$PATH
+
+function BuildAndInstallAndroid
+{
+	ARCHI=$1
+
+	if [ "$ARCHI" = "armeabi-v7a" ]; then
+		ARCHI_CFLAGS="-march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16" 
+		ARCHI_LDFLAGS="-march=armv7-a -Wl,--fix-cortex-a8"
+	fi
+
+	# Set compilation flags
+	unset DEVROOT SDKROOT CFLAGS CC LD CPP CXX AR AS NM CXXCPP RANLIB LDFLAGS CPPFLAGS CXXFLAG
+	export CC=$NDK_HOST_NAME-gcc
+	export LDFLAGS="$ARCHI_LDFLAGS"
+	export CFLAGS="$ARCHI_CFLAGS -std=c99"
+
+	# Configure the build 
+	./configure --host=$NDK_HOST_NAME --prefix=/android-$ARCHI --without-zlib --enable-shared
+
+	# Perform the build and install it
+	make clean
+	make
+	make install DESTDIR=$(pwd)
+}
+
+BuildAndInstallAndroid armeabi 
+BuildAndInstallAndroid armeabi-v7a 

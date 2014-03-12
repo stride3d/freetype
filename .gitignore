@@ -1,4 +1,4 @@
 config.mk
-android/share/*
-android/include/*
-android/bin/*
+android*/share/*
+android*/include/*
+android*/bin/*
