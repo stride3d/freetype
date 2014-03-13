@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# Define script constants
+OUTPUT_LIB_DIR=./ios
+IPHONE_PLATFORM_DIR="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer"
+IPHONE_SDK_DIR="$IPHONE_PLATFORM_DIR/SDKs/iPhoneOS7.1.sdk"
+
+function BuildAndInstall
+{
+   #define function variables
+   ARCHI=$1
+
+   case $ARCHI in 
+      arm* )
+         PLATFORM_SPECIFIC="--without-zlib --without-png --without-bzip2 --prefix=/usr/local/iPhone --host=arm-apple-darwin --enable-static=yes --enable-shared=no"
+	 CC="$(xcrun -find -sdk iphoneos clang)"
+         CFLAGS="-arch $ARCHI -pipe -std=c99 -Wno-trigraphs -fpascal-strings -O2 -Wreturn-type -Wunused-variable -fmessage-length=0 -fvisibility=hidden -miphoneos-version-min=3.2 -I$IPHONE_SDK_DIR/usr/include/libxml12 -isysroot $IPHONE_SDK_DIR/"
+         AR="$IPHONE_PLATFORM_DIR/usr/bin/ar"
+         LDFLAGS="-arch $ARCHI -isysroot $IPHONE_SDK_DIR/ -miphoneos-version-min=3.2"
+
+         // configure the build
+         ./configure $PLATFORM_SPECIFIC CC="$CC" CFLAGS="$CFLAGS" AR="$AR" LDFLAGS="$LDFLAGS"
+         ;;
+      * )
+         CFLAGS="-arch $ARCHI"
+
+         // configure the build
+         ./configure CFLAGS="$CFLAGS"
+         ;;
+   esac	
+
+   # Perform the build and install it
+   make clean
+   make
+   cp objs/.libs/libfreetype.a $OUTPUT_LIB_DIR/libfreetype-$ARCHI.a
+}
+
+# emulator
+BuildAndInstall i386
+BuildAndInstall x86_64
+# iphone
+#BuildAndInstall armv6 #current version of xCode does not support armv6 anymore. Need to re-install old version of Xcode if we want to compile it for armv6
+BuildAndInstall armv7 
+
+# Combine together the different versions of library into a single ".a" file
+cd $OUTPUT_LIB_DIR
+lipo -create -output libfreetype.a libfreetype-*
