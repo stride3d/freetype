@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# Define script constants
+OUTPUT_LIB_DIR=./ios
+IPHONE_PLATFORM_DIR="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer"
+IPHONE_SDK_DIR="$IPHONE_PLATFORM_DIR/SDKs/iPhoneOS7.1.sdk"
+IPHONE_DEPLOY_TARGET=3.2
+
+function BuildAndInstall
+{
+   #define function variables
+   ARCHI=$1
+
+   #clear and redefine build flags
+   unset CFLAGS CC AR LDFLAGS LD CPP CXX AR AS NM CXXCPP RANLIB CPPFLAGS CXXFLAGS
+   export CFLAGS="-arch $ARCHI"
+   if [[ $ARCHI == arm* ]]; then
+      PLATFORM_SPECIFIC="--without-zlib --without-png --without-bzip2 --prefix=/usr/local/iPhone --host=arm-apple-darwin${ARCHI: -1} --enable-static=yes --enable-shared=no"
+      export CC="$(xcrun -find -sdk iphoneos clang)"
+      export CFLAGS="$CFLAGS -x c -fmessage-length=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -Wno-trigraphs -fpascal-strings -O3 -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -DFT2_BUILD_LIBRARY=1 -DDARWIN_NO_CARBON -isysroot $IPHONE_SDK_DIR -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -miphoneos-version-min=$IPHONE_DEPLOY_TARGET -Wextra -Wall  -MMD"
+      export AR="$IPHONE_PLATFORM_DIR/usr/bin/ar"
+      export LDFLAGS="-arch $ARCHI -isysroot $IPHONE_SDK_DIR/ -miphoneos-version-min=$IPHONE_DEPLOY_TARGET"
+   fi
+
+   # configure the build
+   ./configure $PLATFORM_SPECIFIC
+
+   # Perform the build and install it
+   make clean
+   make
+   cp objs/.libs/libfreetype.a $OUTPUT_LIB_DIR/libfreetype-$ARCHI.a
+}
+
+# emulator
+BuildAndInstall i386
+BuildAndInstall x86_64
+# iphone
+#BuildAndInstall armv6 #current version of xCode does not support armv6 anymore. Need to re-install old version of Xcode if we want to compile it for armv6
+BuildAndInstall armv7 
+
+# Combine together the different versions of library into a single ".a" file
+cd $OUTPUT_LIB_DIR
+lipo -create -output libfreetype.a libfreetype-*
+
+# Note: in case of problem here are the name of two tools that can be very usefull to analyze the generated assemblies
+# 1. nm     -> display symbol table
+# 2. otool  -> O-Mach analyzer / disassembler
