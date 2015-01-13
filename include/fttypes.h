@@ -235,7 +235,11 @@ FT_BEGIN_HEADER
   /* <Description>                                                         */
   /*    A typedef for signed long.                                         */
   /*                                                                       */
-  typedef signed long  FT_Long;
+  #ifdef _WIN64
+    typedef signed __int64  FT_Long;
+  #else
+    typedef signed long  FT_Long;
+  #endif
 
 
   /*************************************************************************/
@@ -246,7 +250,11 @@ FT_BEGIN_HEADER
   /* <Description>                                                         */
   /*    A typedef for unsigned long.                                       */
   /*                                                                       */
-  typedef unsigned long  FT_ULong;
+  #ifdef _WIN64
+    typedef unsigned __int64  FT_ULong;
+  #else
+    typedef unsigned long  FT_ULong;
+  #endif
 
 
   /*************************************************************************/
@@ -269,7 +277,11 @@ FT_BEGIN_HEADER
   /*    A signed 26.6 fixed-point type used for vectorial pixel            */
   /*    coordinates.                                                       */
   /*                                                                       */
-  typedef signed long  FT_F26Dot6;
+  #ifdef _WIN64
+    typedef signed __int64  FT_F26Dot6;
+  #else
+    typedef signed long  FT_F26Dot6;
+  #endif
 
 
   /*************************************************************************/
@@ -281,7 +293,11 @@ FT_BEGIN_HEADER
   /*    This type is used to store 16.16 fixed-point values, like scaling  */
   /*    values or matrix coefficients.                                     */
   /*                                                                       */
-  typedef signed long  FT_Fixed;
+  #ifdef _WIN64
+    typedef signed __int64  FT_Fixed;
+  #else
+    typedef signed long  FT_Fixed;
+  #endif
 
 
   /*************************************************************************/
