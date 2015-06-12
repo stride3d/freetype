@@ -1,8 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <VisualStudioVersion>12.0</VisualStudioVersion>
-  </PropertyGroup>
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug Multithreaded|ARM">
       <Configuration>Debug Multithreaded</Configuration>
@@ -83,9 +80,10 @@
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
     <SiliconStudioPlatform Condition="'$(SiliconStudioPlatform)' == ''">Windows</SiliconStudioPlatform>
+    <SiliconStudioNativeTarget Condition="'$(SiliconStudioNativeTarget)' == ''">$(MSBuildThisFileDirectory)SiliconStudioNative.targets</SiliconStudioNativeTarget>
   </PropertyGroup>
-  <Import Project="$(MSBuildThisFileDirectory)SiliconStudioNative.targets" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <Import Project="$(SiliconStudioNativeTarget)" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
