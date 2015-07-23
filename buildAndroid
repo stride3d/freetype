@@ -1,29 +1,37 @@
 #!/bin/bash
 
 # Set local variables
-ANDROID_TARGET_PLATFORM=android-9
-NDK_HOST_NAME=arm-linux-androideabi
-NDK_STANDALONE_DIR=~/ndk-standalone-9
-
-# Create the standalone compiler
-rm -r $NDK_STANDALONE_DIR
-~/android-ndk-r9d/build/tools/make-standalone-toolchain.sh --platform=$ANDROID_TARGET_PLATFORM --install-dir=$NDK_STANDALONE_DIR --toolchain=arm-linux-androideabi-clang3.4
+CLANG_VERSION=clang3.6
+NDK_STANDALONE_DIR=~/ndk-standalone
 
 # Add the compiler path to the path
 export PATH=$NDK_STANDALONE_DIR/bin:$PATH
 
+function CreateStandaloneCompiler
+{
+	TOOLCHAIN=$1-$CLANG_VERSION
+	ANDROID_TARGET_PLATFORM=$2
+	rm -r $NDK_STANDALONE_DIR
+	~/android-ndk-r10e/build/tools/make-standalone-toolchain.sh --platform=$ANDROID_TARGET_PLATFORM --install-dir=$NDK_STANDALONE_DIR --toolchain=$TOOLCHAIN
+}
+
 function BuildAndInstallAndroid
 {
 	ARCHI=$1
+	NDK_HOST_NAME=$2-linux-android
+	unset ARCHI_CFLAGS ARCHI_LDFLAGS
 
 	if [ "$ARCHI" = "armeabi-v7a" ]; then
 		ARCHI_CFLAGS="-march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16" 
 		ARCHI_LDFLAGS="-march=armv7-a -Wl,--fix-cortex-a8"
+	elif [ "$ARCHI" = "arm64-v8a" ]; then
+		ARCHI_CFLAGS="-march=armv8-a" 
+		ARCHI_LDFLAGS="-march=armv8-a"
 	fi
 
 	# Set compilation flags
 	unset DEVROOT SDKROOT CFLAGS CC LD CPP CXX AR AS NM CXXCPP RANLIB LDFLAGS CPPFLAGS CXXFLAG
-	export CC=$NDK_HOST_NAME-clang
+	export CC=clang
 	export LDFLAGS="$ARCHI_LDFLAGS"
 	export CFLAGS="$ARCHI_CFLAGS -O3 -std=c99"
 
@@ -36,5 +44,15 @@ function BuildAndInstallAndroid
 	make install DESTDIR=$(pwd)
 }
 
-BuildAndInstallAndroid armeabi 
-BuildAndInstallAndroid armeabi-v7a 
+CreateStandaloneCompiler arm-linux-androideabi android-9
+BuildAndInstallAndroid armeabi arm
+BuildAndInstallAndroid armeabi-v7a arm 
+
+CreateStandaloneCompiler aarch64-linux-android android-21
+BuildAndInstallAndroid arm64-v8a aarch64
+
+CreateStandaloneCompiler x86 android-9
+BuildAndInstallAndroid x86 x86
+
+CreateStandaloneCompiler x86_64 android-21
+BuildAndInstallAndroid x86_64 x86_64
