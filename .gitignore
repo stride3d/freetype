@@ -6,3 +6,5 @@ android*/lib/*.so
 android*/lib/*.so.6
 android*/lib/*.la
 *.d
+obj
+bin

@@ -2,9 +2,10 @@
 
 # Define script constants
 OUTPUT_LIB_DIR=./ios
+SDK_VERSION=8.3
+IPHONE_DEPLOY_TARGET=4.2
 IPHONE_PLATFORM_DIR="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer"
-IPHONE_SDK_DIR="$IPHONE_PLATFORM_DIR/SDKs/iPhoneOS7.1.sdk"
-IPHONE_DEPLOY_TARGET=3.2
+SIMULATOR_PLATFORM_DIR="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer"
 
 function BuildAndInstall
 {
@@ -12,15 +13,27 @@ function BuildAndInstall
    ARCHI=$1
 
    #clear and redefine build flags
-   unset CFLAGS CC AR LDFLAGS LD CPP CXX AR AS NM CXXCPP RANLIB CPPFLAGS CXXFLAGS
-   export CFLAGS="-arch $ARCHI"
-   if [[ $ARCHI == arm* ]]; then
+   unset CFLAGS CC AR LDFLAGS LD CPP CXX AS NM CXXCPP RANLIB CPPFLAGS CXXFLAGS
+   export CFLAGS="-arch $ARCHI -g0 -Os"
+   
+   export CFLAGS="$CFLAGS -x c -fmessage-length=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -Wno-trigraphs -fpascal-strings -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -DFT2_BUILD_LIBRARY=1 -DDARWIN_NO_CARBON -fstrict-aliasing -Wdeprecated-declarations -Wno-sign-conversion -Wextra -Wall  -MMD"
+
       PLATFORM_SPECIFIC="--without-zlib --without-png --without-bzip2 --prefix=/usr/local/iPhone --host=arm-apple-darwin${ARCHI: -1} --enable-static=yes --enable-shared=no"
-      export CC="$(xcrun -find -sdk iphoneos clang)"
-      export CFLAGS="$CFLAGS -x c -fmessage-length=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -Wno-trigraphs -fpascal-strings -O3 -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-return-type -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wunused-value -Wno-empty-body -Wno-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -DFT2_BUILD_LIBRARY=1 -DDARWIN_NO_CARBON -isysroot $IPHONE_SDK_DIR -fstrict-aliasing -Wdeprecated-declarations -g -Wno-sign-conversion -miphoneos-version-min=$IPHONE_DEPLOY_TARGET -Wextra -Wall  -MMD"
-      export AR="$IPHONE_PLATFORM_DIR/usr/bin/ar"
-      export LDFLAGS="-arch $ARCHI -isysroot $IPHONE_SDK_DIR/ -miphoneos-version-min=$IPHONE_DEPLOY_TARGET"
+
+   if [[ $ARCHI == arm* ]]; then
+      SDK_DIR="$IPHONE_PLATFORM_DIR/SDKs/iPhoneOS$SDK_VERSION.sdk"
+      export CFLAGS="$CFLAGS   -miphoneos-version-min=$IPHONE_DEPLOY_TARGET"
+      export LDFLAGS="$LDFLAGS -miphoneos-version-min=$IPHONE_DEPLOY_TARGET"
+   else
+      SDK_DIR="$SIMULATOR_PLATFORM_DIR/SDKs/iPhoneSimulator$SDK_VERSION.sdk"
+      export CFLAGS="$CFLAGS   -mios-simulator-version-min=$IPHONE_DEPLOY_TARGET"
+      export LDFLAGS="$LDFLAGS -mios-simulator-version-min=$IPHONE_DEPLOY_TARGET"
    fi
+
+   export CFLAGS="$CFLAGS  -isysroot $SDK_DIR"
+   export CC="$(xcrun -find -sdk iphoneos clang)"
+   export AR="$IPHONE_PLATFORM_DIR/usr/bin/ar"
+   export LDFLAGS="$LDFLAGS -arch $ARCHI -isysroot $SDK_DIR/"
 
    # configure the build
    ./configure $PLATFORM_SPECIFIC
@@ -37,6 +50,8 @@ BuildAndInstall x86_64
 # iphone
 #BuildAndInstall armv6 #current version of xCode does not support armv6 anymore. Need to re-install old version of Xcode if we want to compile it for armv6
 BuildAndInstall armv7 
+BuildAndInstall armv7s
+BuildAndInstall arm64 
 
 # Combine together the different versions of library into a single ".a" file
 cd $OUTPUT_LIB_DIR
