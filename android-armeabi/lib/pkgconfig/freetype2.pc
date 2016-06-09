@@ -1,0 +1,14 @@
+prefix="/android-armeabi"
+exec_prefix="/android-armeabi"
+libdir="/android-armeabi/lib"
+includedir="/android-armeabi/include/freetype2"
+
+Name: FreeType 2
+URL: http://freetype.org
+Description: A free, high-quality, and portable font engine.
+Version: 17.2.11
+Requires:
+Requires.private: 
+Libs: -L${libdir} -lfreetype
+Libs.private: 
+Cflags: -I${includedir}
