@@ -2,7 +2,7 @@
 
 # Define script constants
 OUTPUT_LIB_DIR=./ios
-SDK_VERSION=8.3
+SDK_VERSION=9.2
 IPHONE_DEPLOY_TARGET=4.2
 IPHONE_PLATFORM_DIR="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer"
 SIMULATOR_PLATFORM_DIR="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer"
@@ -32,7 +32,7 @@ function BuildAndInstall
 
    export CFLAGS="$CFLAGS  -isysroot $SDK_DIR"
    export CC="$(xcrun -find -sdk iphoneos clang)"
-   export AR="$IPHONE_PLATFORM_DIR/usr/bin/ar"
+   export AR="$(xcrun -find -sdk iphoneos ar)"
    export LDFLAGS="$LDFLAGS -arch $ARCHI -isysroot $SDK_DIR/"
 
    # configure the build
@@ -40,6 +40,11 @@ function BuildAndInstall
 
    # Perform the build and install it
    make clean
+   # TODO: Remove this line once FreeType fixes the wrong C compiler choice.
+   # FreeType build scripts compile `apinames.c` using the target C compiler
+   # when we should actually use the host one. To prevent a C compilation error
+   # we compile it before calling make.
+   clang -o ./objs/apinames ./src/tools/apinames.c
    make
    cp objs/.libs/libfreetype.a $OUTPUT_LIB_DIR/libfreetype-$ARCHI.a
 }
@@ -49,9 +54,9 @@ BuildAndInstall i386
 BuildAndInstall x86_64
 # iphone
 #BuildAndInstall armv6 #current version of xCode does not support armv6 anymore. Need to re-install old version of Xcode if we want to compile it for armv6
-BuildAndInstall armv7 
+BuildAndInstall armv7
 BuildAndInstall armv7s
-BuildAndInstall arm64 
+BuildAndInstall arm64
 
 # Combine together the different versions of library into a single ".a" file
 cd $OUTPUT_LIB_DIR
