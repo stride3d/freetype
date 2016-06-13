@@ -45,6 +45,9 @@ function BuildAndInstallAndroid
 	make install DESTDIR=$(pwd)
 }
 
+# Make it ready for compilation
+./autogen.sh
+
 CreateStandaloneCompiler arm-linux-androideabi android-9
 BuildAndInstallAndroid armeabi arm
 BuildAndInstallAndroid armeabi-v7a arm 
