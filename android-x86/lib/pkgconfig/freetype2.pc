@@ -1,7 +1,7 @@
-prefix=/android-armeabi
-exec_prefix=/android-armeabi
-libdir=/android-armeabi/lib
-includedir=/android-armeabi/include
+prefix=/android-x86
+exec_prefix=/android-x86
+libdir=/android-x86/lib
+includedir=/android-x86/include
 
 Name: FreeType 2
 URL: http://freetype.org
