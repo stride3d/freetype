@@ -1428,6 +1428,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\..\src\base\ftbbox.c" />
+    <ClCompile Include="..\..\..\src\base\ftfntfmt.c" />
     <ClCompile Include="..\..\..\src\base\ftmm.c">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug Multithreaded|Win32'">Disabled</Optimization>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug Multithreaded|ARM'">Disabled</Optimization>
@@ -1497,7 +1498,6 @@
     <ClCompile Include="..\..\..\src\base\ftsynth.c" />
     <ClCompile Include="..\..\..\src\base\fttype1.c" />
     <ClCompile Include="..\..\..\src\base\ftwinfnt.c" />
-    <ClCompile Include="..\..\..\src\base\ftxf86.c" />
     <ClCompile Include="..\..\..\src\base\ftlcdfil.c" />
     <ClCompile Include="..\..\..\src\base\ftgxval.c" />
     <ClCompile Include="..\..\..\src\base\ftotval.c" />
@@ -2285,11 +2285,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\ft2build.h" />
-    <ClInclude Include="..\..\..\include\config\ftconfig.h" />
-    <ClInclude Include="..\..\..\include\config\ftheader.h" />
-    <ClInclude Include="..\..\..\include\config\ftmodule.h" />
-    <ClInclude Include="..\..\..\include\config\ftoption.h" />
-    <ClInclude Include="..\..\..\include\config\ftstdlib.h" />
+    <ClInclude Include="..\..\..\include\freetype\config\ftconfig.h" />
+    <ClInclude Include="..\..\..\include\freetype\config\ftheader.h" />
+    <ClInclude Include="..\..\..\include\freetype\config\ftmodule.h" />
+    <ClInclude Include="..\..\..\include\freetype\config\ftoption.h" />
+    <ClInclude Include="..\..\..\include\freetype\config\ftstdlib.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

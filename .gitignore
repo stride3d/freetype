@@ -8,3 +8,4 @@ android*/lib/*.la
 *.d
 obj
 bin
+objs/vc2010/
