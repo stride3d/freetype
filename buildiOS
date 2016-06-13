@@ -49,6 +49,11 @@ function BuildAndInstall
    cp objs/.libs/libfreetype.a $OUTPUT_LIB_DIR/libfreetype-$ARCHI.a
 }
 
+# Make it ready for compilation
+./autogen.sh
+
+mkdir -p $OUTPUT_LIB_DIR
+
 # emulator
 BuildAndInstall i386
 BuildAndInstall x86_64
