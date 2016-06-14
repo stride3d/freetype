@@ -3,7 +3,7 @@
 # Define script constants
 OUTPUT_LIB_DIR=./ios
 SDK_VERSION=9.2
-IPHONE_DEPLOY_TARGET=4.2
+IPHONE_DEPLOY_TARGET=7.0
 IPHONE_PLATFORM_DIR="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer"
 SIMULATOR_PLATFORM_DIR="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer"
 
