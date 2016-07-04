@@ -80,7 +80,8 @@
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
     <SiliconStudioPlatform Condition="'$(SiliconStudioPlatform)' == ''">Windows</SiliconStudioPlatform>
-    <SiliconStudioNativeTarget Condition="'$(SiliconStudioNativeTarget)' == ''">$(MSBuildThisFileDirectory)SiliconStudioNative.targets</SiliconStudioNativeTarget>
+    <SiliconStudioNativeTarget Condition="'$(SiliconStudioNativeTarget)' == ''">$(MSBuildThisFileDirectory)SiliconStudio.Native.targets</SiliconStudioNativeTarget>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(SiliconStudioNativeTarget)" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
