@@ -11,7 +11,7 @@
     <GenerateProjectSpecificOutputFolder>false</GenerateProjectSpecificOutputFolder>
   </PropertyGroup>
   <PropertyGroup Condition="'$(SiliconStudioPlatform)' == 'Windows'">
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(SiliconStudioPlatform)' == 'WindowsStore' Or '$(SiliconStudioPlatform)' == 'WindowsPhone' Or '$(SiliconStudioPlatform)' == 'Windows10'">
     <AppContainerApplication>true</AppContainerApplication>
@@ -30,7 +30,7 @@
   <PropertyGroup Condition="'$(SiliconStudioPlatform)' == 'Windows10'">
     <ApplicationType>Windows Store</ApplicationType>
     <Keyword>DynamicLibrary</Keyword>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WindowsTargetPlatformVersion>10.0.10240.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10240.0</WindowsTargetPlatformMinVersion>
     <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
